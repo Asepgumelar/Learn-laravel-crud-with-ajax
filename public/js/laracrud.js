@@ -24,7 +24,7 @@ jQuery(document).ready(function($){
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
             }
-        });
+        }); 
         e.preventDefault();
         var formData = {
             url: jQuery('#link').val(),
@@ -82,3 +82,4 @@ jQuery(document).ready(function($){
         });
     });
 });
+

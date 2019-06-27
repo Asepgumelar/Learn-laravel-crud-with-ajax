@@ -11,10 +11,12 @@
 |
 */
 
+Auth::routes();
+Route::get('/home', 'HomeController@index')->name('home');
+
 use App\Link;
-
+use App\Rating;
 use Illuminate\Http\Request;
-
 Route::get('/', function () {
     $links = Link::all();
     return view('laracrud')->with('links', $links);
@@ -39,4 +41,21 @@ Route::put('/links/{link_id?}', function (Request $request, $link_id) {
 Route::delete('/links/{link_id?}', function ($link_id) {
     $link = Link::find($link_id);
     return Response::json($link);
+});
+
+Route::get('/bew', function (Request $request) {
+    $rating = Rating::orderBy("created_at","desc")->paginate(5);
+    if($request->ajax()){
+        return view('bew',compact('rating'))->renderSections()['content'];
+    }else{
+    return view('bew',compact('rating'));
+    }
+});
+Route::post('/bew', function (Request $request) {
+    $rating = new Rating();
+    $rating->user_id = Auth::user()->id;
+    $rating->rating = $request->input('rating');
+    $rating->description = $request->input('description');
+    $rating->save();
+    return back();
 });
